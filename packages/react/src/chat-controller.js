@@ -6,7 +6,7 @@ const lostContext = error => ['conversation_not_found','conversation_incomplete'
 // Transport lifecycle separated from React so cancellation and late callbacks can
 // be exercised deterministically. Stable item IDs preserve renderer-local state.
 export function createChatController({mode = 'generate', intent = 'Present useful interactive UI without changing the source facts.',
-  maxTurns = 20, capabilities, ...connection}) {
+  maxTurns = 20, protocolVersion = PROTOCOL_VERSION, capabilities, ...connection}) {
   if (!['generate','translate'].includes(mode) || !Number.isSafeInteger(maxTurns) || maxTurns < 1 || maxTurns > 100) throw TypeError('Invalid chat options');
   let snapshot = {items:[], busy:false, error:null, contextLost:false}, active = null, parent;
   const listeners = new Set();
@@ -29,7 +29,7 @@ export function createChatController({mode = 'generate', intent = 'Present usefu
       update({busy:true, error:null, items:[...snapshot.items, {id:current.id, prompt:text, state:null}].slice(-maxTurns)});
       try {
         const result = await startTurn({...connection, signal:current.stop.signal,
-          request:{version:PROTOCOL_VERSION, requestId:current.id, input:{mode, text}, intent, capabilities,
+          request:{version:protocolVersion, requestId:current.id, input:{mode, text}, intent, capabilities,
             ...(mode === 'generate' && parent ? {previousTurnId:parent} : {})},
           onState(state) {
             if (active !== current) return;

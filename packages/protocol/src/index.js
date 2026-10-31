@@ -1,4 +1,6 @@
+import {validateLegacySurface} from './legacy-surfaces.js';
 export const PROTOCOL_VERSION = '0.1';
+export const EXTENSIBLE_PROTOCOL_VERSION = '0.2';
 export const UI_PROFILE = Object.freeze({id:'intlui.ui', version:'0.1'});
 const terminalStatuses = new Set(['complete', 'partial', 'cancelled', 'failed']);
 const idPattern = /^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,127}$/;
@@ -14,7 +16,7 @@ function string(value, name, max = 30000, nonempty = true) {
 }
 function id(value, name) { if (typeof value !== 'string' || !idPattern.test(value)) fail(`Invalid ${name}`); }
 function integer(value, name, minimum = 0) { if (!Number.isSafeInteger(value) || value < minimum) fail(`Invalid ${name}`); }
-function version(value) { if (value !== PROTOCOL_VERSION) fail('Unsupported protocol version'); }
+function version(value) { if (![PROTOCOL_VERSION, EXTENSIBLE_PROTOCOL_VERSION].includes(value)) fail('Unsupported protocol version'); }
 export function validateProfile(value) {
   keys(value, ['id','version'], 'profile'); id(value.id, 'profile.id'); id(value.version, 'profile.version');
   return value;
@@ -46,14 +48,15 @@ function names(values, name, max = 64) {
   for (const value of values) id(value, name);
 }
 
-export function validateCapabilities(value) {
+export function validateCapabilities(value, protocolVersion = EXTENSIBLE_PROTOCOL_VERSION) {
+  version(protocolVersion);
   keys(value, ['surface', 'formats', 'components', 'profile'], 'capabilities');
   if (value.profile !== undefined) validateProfile(value.profile);
-  if (!['react', 'widget', 'shopify-account', 'text'].includes(value.surface)) fail('Unsupported surface');
+  id(value.surface, 'surface');
   names(value.formats, 'formats', 1);
   if (value.formats.some(format => format !== 'dil')) fail('Unsupported UI format');
   names(value.components, 'components', 128);
-  if (['shopify-account', 'text'].includes(value.surface) && (value.formats.length || value.components.length)) fail('Surface is text-only in protocol 0.1');
+  if (protocolVersion === '0.1') validateLegacySurface(value);
   if (!value.formats.length && value.components.length) fail('Components require a UI format');
   return value;
 }
@@ -68,7 +71,7 @@ export function validateRequest(value) {
     if (value.input.mode !== 'generate') fail('Conversation context requires generate mode');
   }
   if (value.input.mode === 'translate-stream') { if (value.input.text !== '') fail('Streaming input starts empty'); }
-  else string(value.input.text, 'input.text'); validateCapabilities(value.capabilities);
+  else string(value.input.text, 'input.text'); validateCapabilities(value.capabilities, value.version);
   profileVersion(value.version, value.capabilities.profile);
   return value;
 }
@@ -132,9 +135,9 @@ export function validateEvent(event) {
 export function createTurnState(scope, capabilities, protocolVersion = PROTOCOL_VERSION) {
   keys(scope, ['projectId', 'conversationId', 'turnId'], 'scope');
   for (const field of ['projectId', 'conversationId', 'turnId']) id(scope[field], field);
-  validateCapabilities(capabilities);
+  validateCapabilities(capabilities, protocolVersion);
   profileVersion(protocolVersion, capabilities.profile);
-  return { ...scope, capabilities: structuredClone(capabilities), sequence: 0, turnRevision: 0,
+  return { ...scope, ...(protocolVersion !== PROTOCOL_VERSION ? {protocolVersion} : {}), capabilities: structuredClone(capabilities), sequence: 0, turnRevision: 0,
     text: '', blocks: [], status: 'receiving', errors: [], terminal: false, reason: null };
 }
 

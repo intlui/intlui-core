@@ -1,6 +1,6 @@
 {
   "name": "@intlui/client",
-  "version": "0.1.0-beta.1",
+  "version": "0.2.0-beta.1",
   "type": "module",
   "license": "Apache-2.0",
   "types": "./src/index.d.ts",
@@ -16,7 +16,7 @@
     "NOTICE"
   ],
   "dependencies": {
-    "@intlui/protocol": "0.1.0-beta.1"
+    "@intlui/protocol": "0.2.0-beta.1"
   },
   "scripts": {
     "test": "node --test test/*.test.mjs"

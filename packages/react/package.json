@@ -1,6 +1,6 @@
 {
   "name": "@intlui/react",
-  "version": "0.1.0-beta.1",
+  "version": "0.2.0-beta.1",
   "type": "module",
   "license": "Apache-2.0",
   "types": "./dist/index.d.ts",
@@ -38,10 +38,10 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@intlui/protocol": "0.1.0-beta.1",
+    "@intlui/protocol": "0.2.0-beta.1",
     "acorn": "^8.19.0",
     "marked": "^18.1.1",
-    "@intlui/client": "0.1.0-beta.1"
+    "@intlui/client": "0.2.0-beta.1"
   },
   "peerDependencies": {
     "@types/react": "^19.0.0",

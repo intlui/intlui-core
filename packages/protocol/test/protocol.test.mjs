@@ -78,13 +78,13 @@ test('duplicate IDs, unknown updates and skipped data revisions are rejected', (
   assert.equal(reduceEvent(state, event(3, 'ui.remove', { id: 'tasks' })).blocks.length, 0);
 });
 
-test('capability mismatch requires producer fallback; Shopify account has no DIL runtime in v0.1', () => {
+test('legacy text-only surface rejects UI while retaining text fallback', () => {
   const caps = { surface: 'shopify-account', formats: [], components: [] };
   assert.equal(supportsBlock(caps, fixture.events[1].block), false);
   const state = createTurnState(fixture.scope, caps);
   assert.throws(() => reduceEvent(state, { ...fixture.events[1], sequence: 1 }), /Unsupported client capability/);
   assert.equal(reduceEvent(state, event(1, 'text.delta', { text: 'Text fallback' })).text, 'Text fallback');
-  assert.throws(() => validateCapabilities({ ...caps, formats: ['dil'], components: ['text'] }), /text-only/);
+  assert.throws(() => validateCapabilities({ ...caps, formats: ['dil'], components: ['text'] }, '0.1'), /text-only/);
 });
 
 test('provider error is explicit and independent from terminal status', () => {

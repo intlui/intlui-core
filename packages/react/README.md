@@ -331,7 +331,7 @@ srcdoc, Workers, MessageChannel and the applicable CSP permissions for blob
 workers. Parsing is not a security proof; this isolation has not had a security
 audit and should not be described as production-hardened arbitrary-code hosting.
 Custom host components execute normally in the application and are trusted.
-This is a DOM renderer, not a Shopify account extension renderer.
+This renderer requires a React DOM host. Other host environments provide their own profile renderer.
 
 The host validates worker messages before passing snapshots to React. It checks
 message types, command-sequence bounds, diagnostic/error strings, plain data,
@@ -442,9 +442,10 @@ const limitedWidget = createRendererCapabilities({
 ```
 
 The subpath imports neither React nor the sandbox. Each call returns independent
-arrays. Supported surfaces are `react` and `widget`; component subsets must use
-unique built-in names. An empty subset disables UI translation. Math and Shopify
-account surfaces are not supported by this renderer profile. Custom host adapters
+arrays. Under protocol `0.2`, surface names are bounded application identifiers;
+they do not grant renderer capabilities. Component subsets must use unique
+built-in names. An empty subset disables UI translation. Math is not supported
+by this renderer profile. Custom host adapters
 do not automatically extend the profile. Declaring a subset controls negotiation,
 not authorization or a sandbox security policy. The helper is also exported from
 the main React entrypoint. SSR tests check every advertised component against the

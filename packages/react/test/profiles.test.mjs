@@ -47,3 +47,16 @@ test('custom state owner reuses shared primitives and preserves interaction acro
   assert.throws(() => runtime.tree(artifact,{count:-1}), /Invalid/);
   assert.match(runtime.tree(artifact,{count:3})[0].children[0], /local clicks: 2/);
 });
+
+
+test('application-owned component and surface render through a registered profile', async () => {
+  const custom = await import('../../../examples/profiles/custom-counter.js');
+  const entries = createRendererProfiles([{...custom,Renderer}]);
+  const caps = entries.capabilities(custom.profile,{surface:'example.native'});
+  assert.deepEqual(caps.components,['example.counter']);
+  assert.equal(caps.surface,'example.native');
+  assert.throws(() => entries.capabilities(custom.profile,{surface:'bad surface'}));
+  assert.throws(() => entries.capabilities(custom.profile,{components:['missing']}));
+  const html = renderToStaticMarkup(React.createElement(DilSource,{source,profile:custom.profile,profiles:entries,appData:{count:7}}));
+  assert.match(html,/Sample: 7; local clicks: 0/);
+});

@@ -2,11 +2,12 @@
 
 ## Language profiles
 
-Protocol `0.1` supports implicit UI or an explicit language selection.
+Protocols `0.1` and `0.2` support implicit UI or an explicit language selection.
 An explicit selection requires `capabilities.profile: {id, version}` in requests and
 `profile` on created blocks. Both descriptor fields are bounded identifiers;
 unknown fields are rejected. `UI_PROFILE` identifies `intlui.ui` version `0.1`.
-`PROTOCOL_VERSION` is `0.1` for both modes.
+`PROTOCOL_VERSION` remains `0.1` for compatibility. Select
+`EXTENSIBLE_PROTOCOL_VERSION` (`0.2`) explicitly for application-owned surfaces.
 
 Use `createTurnState(scope, capabilities, request.version)` and `reduceEvent` to
 reject unsupported protocol versions, profile substitutions and mismatched capabilities.
@@ -60,15 +61,23 @@ shape `{organizationId, projectId, principalId, environment}` (`development` or
 `production`). Passing this validator does **not** authenticate or authorize
 anyone. Never construct an authoritative context by copying browser fields.
 
-Capabilities have `surface`, `formats` and `components` (up to 128 unique names). Surfaces are `react`,
-`widget`, `shopify-account`, `text`. The only UI format currently defined is
-`dil`; text-only clients advertise empty lists. Shopify account is text-only
-in this foundation until a separately validated declarative adapter exists.
+Capabilities have `surface`, `formats` and `components` (up to 128 unique names).
+Protocol `0.2` treats surfaces as bounded identifiers: 1-128 ASCII characters,
+starting with an alphanumeric character, followed by alphanumerics, `.`, `_`, `:`
+or `-`. The host owns the namespace and implementation; the core has no provider
+registry. UI support comes from formats and components, never the surface name.
+The wire format remains `dil`; a versioned language profile defines the source
+grammar and implementation. Empty formats require empty components.
+
+Protocol `0.1` retains its frozen surface rules in `src/legacy-surfaces.js` for
+published peers. New surfaces require an explicit `version: '0.2'` request.
+`validateCapabilities(value, version)` can check either contract; when omitted,
+it checks `0.2`. `validateRequest` always checks the request version.
 `supportsBlock` compares declared requirements only; it does not inspect DIL.
 
 ## Events
 
-Every event contains `version: '0.1'`, `projectId`, `conversationId`, `turnId`,
+Every event contains the request's `version` (`0.1` or `0.2`), `projectId`, `conversationId`, `turnId`,
 `sequence` (starts at 1), `turnRevision` (starts at 0), and `type`.
 Unknown fields/types/versions are rejected. IDs use 1–128 ASCII letters, digits,
 dot, underscore, colon or hyphen and start with a letter or digit.

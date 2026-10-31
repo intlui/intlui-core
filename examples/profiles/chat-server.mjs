@@ -1,9 +1,10 @@
 import {setTimeout as delay} from 'node:timers/promises';
 import {createChatHandler} from '@intlui/server';
 import {serverProfile} from './counter.js';
+import {serverProfile as customProfile} from './custom-counter.js';
 
 export function createDemoChat() {
-  return createChatHandler({profiles:[serverProfile], authenticate:() => ({userId:'local-demo'}),
+  return createChatHandler({profiles:[serverProfile,customProfile], authenticate:() => ({userId:'local-demo'}),
     provider:{id:'synthetic-counter', modes:['generate'], async *generate({signal}) {
       yield 'Synthetic counter starts at 1. ';
       await delay(1500, undefined, {signal});

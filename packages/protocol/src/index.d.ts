@@ -1,5 +1,6 @@
 export const PROTOCOL_VERSION: '0.1';
-export type ProtocolVersion = '0.1';
+export const EXTENSIBLE_PROTOCOL_VERSION: '0.2';
+export type ProtocolVersion = '0.1' | '0.2';
 export interface LanguageProfile {readonly id:string; readonly version:string}
 export const UI_PROFILE: Readonly<LanguageProfile>;
 export function validateProfile(value:unknown):LanguageProfile;
@@ -7,9 +8,9 @@ export function profileKey(value:LanguageProfile):string;
 export function sameProfile(left:LanguageProfile,right:LanguageProfile):boolean;
 export type JsonValue = null | boolean | number | string | JsonValue[] | JsonObject;
 export interface JsonObject { [key: string]: JsonValue }
-export type Capabilities = {profile?:LanguageProfile} & (
-  | { surface: 'react' | 'widget'; formats: ['dil']; components: string[] }
-  | { surface: 'react' | 'widget' | 'shopify-account' | 'text'; formats: []; components: [] });
+export type Capabilities = {surface:string; profile?:LanguageProfile} & (
+  | { formats: ['dil']; components: string[] }
+  | { formats: []; components: [] });
 export interface TurnRequestBody {
   requestId: string;
   /** Server-owned completed generation turn; authorization is checked by the API. */
@@ -17,7 +18,7 @@ export interface TurnRequestBody {
   intent: string;
   input: { mode: 'generate' | 'translate' | 'translate-stream'; text: string };
 }
-export type TurnRequest = TurnRequestBody & {version:'0.1'; capabilities:Capabilities};
+export type TurnRequest = TurnRequestBody & {version:ProtocolVersion; capabilities:Capabilities};
 /** Shape only: this does not authenticate the principal or authorize access. */
 export interface ResolvedContext {
   organizationId: string;
@@ -67,7 +68,7 @@ export interface TurnState extends TurnScope {
   reason: string | null;
 }
 /** Validators return the validated value or throw TypeError; use the return value to narrow unknown data. */
-export function validateCapabilities(value: unknown): Capabilities;
+export function validateCapabilities(value: unknown, protocolVersion?:ProtocolVersion): Capabilities;
 export function validateRequest(value: unknown): TurnRequest;
 export function validateResolvedContext(value: unknown): ResolvedContext;
 export function validateBlock(value: unknown): DilBlock;

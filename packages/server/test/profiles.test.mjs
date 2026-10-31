@@ -84,3 +84,20 @@ test('OpenAI translator receives server-owned profile instructions, not the UI g
   const translated=bodies.find(body=>body.instructions.includes(adapter.instructions));assert(translated);
   assert(!translated.instructions.includes('DIL.useState'));assert.deepEqual(JSON.parse(translated.input[0].content).profile,profile);
 });
+
+
+test('0.2 transports an application-owned surface and component through the real client/server pipeline', async () => {
+  const {serverProfile} = await import('../../../examples/profiles/custom-counter.js');
+  const handler = make({profiles:[serverProfile],provider:provider(async function* () {
+    yield {type:'create',id:'external',source:'{"kind":"counter","label":"External"}',appData:{count:1}};
+    yield {type:'data',id:'external',appData:{count:2}};
+  })});
+  const request = input({version:'0.2',capabilities:{surface:'example.native',formats:['dil'],components:['example.counter'],profile:serverProfile.profile}});
+  const state = await run(handler,request);
+  assert.equal(state.status,'complete'); assert.equal(state.protocolVersion,'0.2');
+  assert.equal(state.blocks[0].appData.count,2);
+  assert.deepEqual(state.blocks[0].requiredComponents,['example.counter']);
+  const denied = await run(handler,{...request,requestId:crypto.randomUUID(),capabilities:{...request.capabilities,components:['other']}});
+  assert.equal(denied.blocks.length,0); assert.equal(denied.status,'partial');
+  assert.equal((await raw(handler,{...request,version:'0.1'})).status,400);
+});

@@ -1,5 +1,5 @@
 import type { ComponentType, CSSProperties, ReactElement, ReactNode } from 'react';
-import type { JsonObject, JsonValue, TurnScope, TurnState, LanguageProfile, Capabilities } from '@intlui/protocol';
+import type { JsonObject, JsonValue, TurnScope, TurnState, LanguageProfile, Capabilities, ProtocolVersion } from '@intlui/protocol';
 import type { DilArtifact } from './compiler.js';
 export * from './compiler.js';
 export * from './capabilities.js';
@@ -15,12 +15,14 @@ export interface RendererProfile<T = unknown> {
 }
 export interface RendererProfiles {
   resolve(profile:LanguageProfile):RendererProfile<any>;
-  capabilities(profile:LanguageProfile,options?:{surface?:'react'|'widget'; components?:string[]}):Capabilities & {profile:LanguageProfile};
+  capabilities(profile:LanguageProfile,options?:{surface?:string; components?:string[]}):Capabilities & {profile:LanguageProfile};
   compile(profile:LanguageProfile,source:string):{artifact:ProfileArtifact; diagnostics:import('./compiler.js').DilDiagnostic[]; Renderer:RendererProfile<any>['Renderer']; adapter:RendererProfile<any>};
 }
 export function createRendererProfiles(entries?:RendererProfile<any>[]):RendererProfiles;
 
 export interface IntluiChatOptions {
+  /** Select 0.2 for extensible surfaces; defaults to 0.1 for existing peers. */
+  protocolVersion?:ProtocolVersion;
   endpoint?:string; apiBaseUrl?:string; token?:string; projectId?:string;
   /** Change when the authenticated session changes to discard the previous conversation. */
   sessionKey?:string; mode?:'generate'|'translate'; intent?:string; maxTurns?:number;

@@ -6,6 +6,16 @@ adapters are supported. Version 0.1.0-beta.1 is published on npm's beta channel;
 it is not a stable release.
 See [test scope and limitations](TESTING.md) and [versioning](VERSIONING.md).
 
+## Unreleased extensibility
+
+The working package version is 0.2.0-beta.1. Explicit protocol 0.2 accepts
+application-owned surfaces; protocol 0.1 remains available for published peers.
+Custom profiles supply their own component catalog, compiler, validator and
+renderer. See EXTENSIONS.md. No release has been published for these changes.
+119 package tests, library/example builds, strict external TypeScript and an
+external archive consumer passed. The user confirmed the custom profile demo's
+browser interactions on 2026-10-31; see TESTING.md for scope.
+
 ## Completed checks
 
 - All 12 stages of `npm run verify:release` passed in the user's Windows

@@ -78,10 +78,10 @@ import {compileDil} from '@intlui/react/compiler';
 import {createRendererCapabilities} from '@intlui/react/capabilities';
 import {createRendererProfiles,DilSource} from '@intlui/react';
 const profile={id:'example.independent',version:'0.1'};
-const adapter={profile,compile(source){assert.equal(source,'count');return {artifact:{kind:'count'},requiredComponents:['text']};},validateData(artifact,data){assert(Number.isInteger(data.count));},instructions:'Use count source and integer count data.'};
-const profiles=createRendererProfiles([{...adapter,components:['text'],Renderer:({appData})=>React.createElement('p',null,appData.count)}]);
+const adapter={profile,compile(source){assert.equal(source,'count');return {artifact:{kind:'count'},requiredComponents:['example.external']};},validateData(artifact,data){assert(Number.isInteger(data.count));},instructions:'Use count source and integer count data.'};
+const profiles=createRendererProfiles([{...adapter,components:['example.external'],Renderer:({appData})=>React.createElement('p',null,appData.count)}]);
 const custom=createChatHandler({profiles:[adapter],authenticate:()=>({userId:'external'}),provider:{id:'synthetic',modes:['generate'],async *generate(){yield 'Fact';},async *translate(){yield {type:'create',id:'count',source:'count',appData:{count:3}};}}});
-const customState=await startTurn({endpoint:'http://localhost/chat',request:{version:'0.1',requestId:'profile',intent:'Count',input:{mode:'generate',text:'Count'},capabilities:profiles.capabilities(profile)},fetchImpl:(url,init)=>custom(new Request(url,init))});
+const customState=await startTurn({endpoint:'http://localhost/chat',request:{version:'0.2',requestId:'profile',intent:'Count',input:{mode:'generate',text:'Count'},capabilities:profiles.capabilities(profile,{surface:'example.external-host'})},fetchImpl:(url,init)=>custom(new Request(url,init))});
 assert.equal(customState.status,'complete');assert.deepEqual(customState.blocks[0].profile,profile);
 assert.match(renderToStaticMarkup(React.createElement(DilSource,{profile,profiles,source:'count',appData:customState.blocks[0].appData})),/>3</);
 const compiled=compileDil('<textarea/><svg><circle cx=2 cy=2 r=1/></svg><timer/>');
@@ -97,4 +97,3 @@ assert.equal(state.status,'complete');assert.equal(state.blocks.length,1);consol
 } catch(error) {report.error=error.message;process.exitCode=1;}
 await writeFile(join(output,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 console.log('Local diagnostics:',output);
-

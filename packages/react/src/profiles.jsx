@@ -24,7 +24,7 @@ export function createRendererProfiles(entries = []) {
   const resolve=profile=>{const entry=registry.get(profileKey(profile));if(!entry)throw TypeError('Unsupported renderer profile');return entry;};
   const capabilities=(profile,{surface='react',components}={}) => {
       const entry=resolve(profile), selected=components ?? entry.components;
-      if(!['react','widget'].includes(surface) || !Array.isArray(selected) || selected.some(name=>!entry.components.includes(name)))throw TypeError('Unsupported profile components');
+      if(!Array.isArray(selected) || selected.some(name=>!entry.components.includes(name)))throw TypeError('Unsupported profile components');
       return validateCapabilities({surface,formats:selected.length?['dil']:[],components:[...selected],profile:{...entry.profile}});
     };
   return Object.freeze({

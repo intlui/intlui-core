@@ -1,7 +1,8 @@
 # Versioning
 
-Project packages use Semantic Versioning. The current package version is **0.1.0-beta.1**;
-the wire protocol and built-in UI profile use **0.1**. Third-party dependencies
+Project packages use Semantic Versioning. The working package version is **0.2.0-beta.1** (not yet published);
+the published beta remains **0.1.0-beta.1**. Wire protocols **0.1** and **0.2**
+are supported; the built-in UI profile remains **0.1**. Third-party dependencies
 retain their own versions. Test cases may intentionally use unsupported versions.
 
 Protocol 0.1 includes both implicit UI and explicit language profiles. Omitting
@@ -36,9 +37,9 @@ must explicitly select a supported profile; never silently switch its grammar.
 Development uses `main` with short-lived branches and checked pull requests.
 There is no permanent development or release branch. Releases are explicit;
 merging a change does not publish it. All four packages share one version.
-Beta releases use matching `v0.1.0-beta.N` Git tags and the npm `beta` dist-tag
-when npm publishing is enabled. Keep the wire protocol/profile at 0.1 unless
-their contracts change. Promote to an ordinary release only by a separate
+Beta releases use matching `vX.Y.Z-beta.N` Git tags and the npm `beta` dist-tag
+when npm publishing is enabled. Version 0.2 adds extensible surface semantics;
+0.1 retains its original semantics. Profile versions change independently. Promote to an ordinary release only by a separate
 release decision; never overwrite a published beta version.
 
 Publishing source on GitHub does not publish packages on npm. Keep `private: true`
@@ -46,4 +47,6 @@ until a separate npm release is authorized. The workspace root remains private.
 Use immutable `vX.Y.Z` Git tags for releases, with changelog and validation evidence.
 Never reuse a released version, force-update a release tag or publish from failing
 checks. A GitHub source preview may disclose outstanding validation gaps without
-claiming stable or production-ready status. No publish operation runs in CI.
+claiming stable or production-ready status. Ordinary CI does not publish; the
+explicitly dispatched `publish.yml` workflow publishes through npm Trusted Publishing
+and then verifies a fresh installation of all four registry packages.

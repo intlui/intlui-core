@@ -27,3 +27,4 @@ jobs:
       - run: npm run build
       - run: npm run audit:consumer
       - run: npm run publish:beta
+      - run: npm run verify:npm

@@ -13,10 +13,10 @@ test('profile identity is explicit, bounded and independent of protocol version'
   validateRequest(request);
   for(const value of [{},null,{id:'x',version:''},{id:'x',version:'0.1',url:'https://example.com'}, {id:'x'.repeat(129),version:'0.1'}])assert.throws(()=>validateProfile(value));
   assert.notEqual(profileKey({id:'a:b',version:'c'}),profileKey({id:'a',version:'b:c'}));
-  assert.throws(()=>validateRequest({...request,version:'0.2'}),/protocol/);
+  validateRequest({...request,version:'0.2'});
   validateRequest({...request,capabilities:{surface:'react',formats:['dil'],components:['button']}});
   assert.throws(()=>validateRequest({...request,version:'0.3'}),/protocol/);
-  assert.throws(()=>createTurnState(scope,capabilities,'0.2'),/protocol/);
+  assert.equal(createTurnState(scope,capabilities,'0.2').protocolVersion,'0.2');
 });
 
 test('replication rejects profile/version substitution and preserves profile on updates',()=>{

@@ -79,3 +79,21 @@ The publication check trusts only the script's checkout for its read-only Git
 invocation, without changing global Git settings.
 Next production-server interaction, physical dragging, playback, GPU behavior
 and broader browser coverage remain outside the passing checks.
+
+## Unreleased 0.2.0-beta.1 extensibility checks
+
+On 2026-10-31: 119 package tests passed, including explicit 0.2 request/event
+matching, frozen 0.1 restrictions, application-owned surface/component round trips,
+undeclared component rejection, profile rendering and chat protocol selection.
+Public-boundary and publication-candidate checks passed. The library and custom
+profile demo built successfully. An independent consumer installed all four npm
+archives, exercised protocol 0.2 with an external surface/component and passed
+strict TypeScript checks against the new declarations. Third-party dependencies
+and TypeScript tooling came from existing local installations; this is not a
+registry publication check.
+
+The user manually verified the new profile demo in the browser on 2026-10-31,
+including local counter state across data revisions and reset. This is manual
+validation, not automated browser coverage. Older-peer interoperability over a
+real network has not been exercised. Legacy behavior is covered by unit tests;
+no live provider calls or publication were performed for this change.

@@ -54,3 +54,17 @@ test('a second send while receiving cannot start another provider request', asyn
   const running=controller.send('First'); await assert.rejects(controller.send('Second'));
   finish(response('first')); await running; assert.equal(calls,1);
 });
+
+
+test('chat explicitly selects 0.2 for external surfaces and refuses mismatched responses', async () => {
+  const caps = {surface:'example.native',formats:[],components:[]};
+  let request;
+  const controller = createChatController({protocolVersion:'0.2',capabilities:caps,endpoint:'/chat',fetchImpl:async(_,init)=>{
+    request=JSON.parse(init.body);
+    return new Response(events('external').map(event=>JSON.stringify({...event,version:'0.2'})).join('\n'));
+  }});
+  const state=await controller.send('Hello');
+  assert.equal(request.version,'0.2'); assert.equal(state.protocolVersion,'0.2');
+  const wrong=createChatController({protocolVersion:'0.2',capabilities:caps,endpoint:'/chat',fetchImpl:async()=>response('wrong')});
+  await assert.rejects(wrong.send('Hello'),/version mismatch/);
+});

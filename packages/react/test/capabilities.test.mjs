@@ -7,7 +7,7 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {validateCapabilities} from '@intlui/protocol';
 import {createRendererCapabilities} from '@intlui/react/capabilities';
 
-test('renderer profiles are independent, validated subsets and never advertise text-only surfaces or math', () => {
+test('renderer profiles are independent, validated subsets and accept host identifiers without advertising unsupported components', () => {
   const first = createRendererCapabilities();
   validateCapabilities(first);
   assert(!first.components.includes('math'));
@@ -20,7 +20,8 @@ test('renderer profiles are independent, validated subsets and never advertise t
   validateCapabilities(widget);
   assert.deepEqual(createRendererCapabilities({components: []}).formats, []);
   for (const components of [['math'], ['unknown'], ['text', 'text'], 'text', new Array(1)]) assert.throws(() => createRendererCapabilities({components}), TypeError);
-  assert.throws(() => createRendererCapabilities({surface: 'shopify-account'}), TypeError);
+  assert.equal(createRendererCapabilities({surface: 'example.account'}).surface, 'example.account');
+  for (const surface of ['', 'bad surface', '../bad', 'x'.repeat(129), null]) assert.throws(() => createRendererCapabilities({surface}), TypeError);
 });
 
 test('every advertised component has a native renderer without an unsupported fallback', async () => {
