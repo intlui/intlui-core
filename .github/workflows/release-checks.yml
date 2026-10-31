@@ -1,0 +1,36 @@
+name: Release integration checks
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release-checks.yml'
+      - 'scripts/verify-release.mjs'
+      - 'scripts/test-release-browser.mjs'
+      - 'examples/profiles/**'
+      - 'examples/next-chat/**'
+      - 'packages/**'
+      - 'package-lock.json'
+permissions:
+  contents: read
+jobs:
+  release-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      INTLUI_DIAGNOSTICS_DIR: ${{ runner.temp }}/intlui-release-checks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm run verify:release
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-check-results
+          path: |
+            ${{ runner.temp }}/intlui-release-checks/**/summary.json
+            ${{ runner.temp }}/intlui-release-checks/**/summary.txt
+            ${{ runner.temp }}/intlui-release-checks/**/*.log
+            ${{ runner.temp }}/intlui-release-checks/**/*.png

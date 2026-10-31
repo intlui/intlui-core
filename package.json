@@ -32,7 +32,9 @@
     "audit:consumer": "node scripts/audit-consumer.mjs",
     "pack:packages": "npm run build && node scripts/pack-packages.mjs",
     "test:browser:chat": "node scripts/test-chat-browser.mjs",
-    "test:browser:advanced": "node scripts/test-advanced-browser.mjs"
+    "test:browser:advanced": "node scripts/test-advanced-browser.mjs",
+    "test:browser:profiles": "node scripts/test-release-browser.mjs profiles",
+    "test:browser:next": "node scripts/test-release-browser.mjs next"
   },
   "devDependencies": {
     "vite": "^8.3.5"

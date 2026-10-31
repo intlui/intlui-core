@@ -51,7 +51,11 @@ try {
     const require = createRequire(join(tooling, 'package.json'));
     await command('browser-advanced', npmRun('test:browser:advanced'), root,
       {INTLUI_BROWSER_DRIVER:pathToFileURL(require.resolve('puppeteer-core')).href});
-  } else results.push({name:'browser-advanced', status:'skipped', reason:'Browser driver installation failed'});
+    await command('browser-profiles', ['scripts/test-release-browser.mjs','profiles'], root,
+      {INTLUI_BROWSER_DRIVER:pathToFileURL(require.resolve('puppeteer-core')).href});
+  } else {
+    for (const name of ['browser-advanced','browser-profiles']) results.push({name, status:'skipped', reason:'Browser driver installation failed'});
+  }
 
   const packed = await command('pack-packages', npmRun('pack:packages'));
   if (!packed) throw Error('Archive preparation failed.');
@@ -64,9 +68,14 @@ try {
   if (consumerReady) {
     await cp(join(root, 'examples/typescript'), join(consumer, 'typecheck'), {recursive:true});
     await command('typescript-consumer', [join(consumer, 'node_modules/typescript/bin/tsc'), '-p', 'typecheck/tsconfig.json'], consumer);
-    await command('next-build', npmRun('build'), consumer);
+    const nextBuilt = await command('next-build', npmRun('build'), consumer);
+    if (nextBuilt && driverReady) {
+      const require = createRequire(join(tooling, 'package.json'));
+      await command('next-browser', ['scripts/test-release-browser.mjs','next'], root,
+        {INTLUI_NEXT_CONSUMER:consumer,INTLUI_BROWSER_DRIVER:pathToFileURL(require.resolve('puppeteer-core')).href});
+    } else results.push({name:'next-browser',status:'skipped',reason:'Next build or browser tooling unavailable'});
   } else {
-    for (const name of ['typescript-consumer','next-build']) results.push({name, status:'skipped', reason:'Consumer dependency installation failed'});
+    for (const name of ['typescript-consumer','next-build','next-browser']) results.push({name, status:'skipped', reason:'Consumer dependency installation failed'});
   }
 } catch (error) {
   results.push({name:'verification', status:'failed', reason:error.message});
@@ -74,7 +83,7 @@ try {
 } finally {
   await writeFile(join(output, 'summary.json'), JSON.stringify({results, limitations:[
     'Single installed Chrome; no cross-browser coverage.',
-    'Next production build only; no production-server browser exercise.',
+    'Next production browser check uses synthetic chat; no live provider or deployment.',
     'Synthetic providers only; no live OpenAI calls.'
   ]}, null, 2));
   const summary = results.map(result => `${result.status.toUpperCase()}: ${result.name}${result.reason ? ` — ${result.reason}` : ''}`).join('\n');
