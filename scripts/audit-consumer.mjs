@@ -16,9 +16,13 @@ const report={checks:[],limitations:['Dependencies are preseeded from the local 
 let stage=0;
 async function run(args,cwd=directory) {
   const child=spawn(process.execPath,args,{cwd,windowsHide:true,env:{...process.env,NODE_PATH:'',npm_config_logs_dir:join(output,'npm-logs')},stdio:['ignore','pipe','pipe']});
-  let text='';child.stdout.on('data',chunk=>text+=chunk);child.stderr.on('data',chunk=>text+=chunk);
+  let stdout='',stderr='';
+  child.stdout.on('data',chunk=>stdout+=chunk);
+  child.stderr.on('data',chunk=>stderr+=chunk);
   const timer=setTimeout(()=>child.kill(),120000); const [code]=await once(child,'exit');clearTimeout(timer);
-  await writeFile(join(output,`${++stage}.log`),text);assert.equal(code,0,`Consumer step failed: ${output}/${stage}.log`);return text;
+  await writeFile(join(output,`${++stage}.log`),`STDOUT\n${stdout}\nSTDERR\n${stderr}`);
+  assert.equal(code,0,`Consumer step failed: ${output}/${stage}.log`);
+  return stdout;
 }
 try {
   await run([npm,'run','build'],root);
@@ -93,3 +97,4 @@ assert.equal(state.status,'complete');assert.equal(state.blocks.length,1);consol
 } catch(error) {report.error=error.message;process.exitCode=1;}
 await writeFile(join(output,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 console.log('Local diagnostics:',output);
+
