@@ -2,7 +2,8 @@
 
 The core implements standalone React chat, a server module, the UI profile and
 shared primitives used by a separate SSR runtime. Custom server and React profile
-adapters are supported. This is a GitHub source preview, not a stable or npm release.
+adapters are supported. Version 0.1.0-beta.1 is published on npm's beta channel;
+it is not a stable release.
 See [test scope and limitations](TESTING.md) and [versioning](VERSIONING.md).
 
 ## Completed checks

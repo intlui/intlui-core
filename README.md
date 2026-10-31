@@ -1,6 +1,6 @@
 # IntlUI
 
-Initial 0.1.0-beta.1 candidate. [Validation and remaining work](STATUS.md) ·
+Initial 0.1.0-beta.1 release. [Validation and remaining work](STATUS.md) ·
 [Language profile architecture](ARCHITECTURE.md).
 
 React chat with text responses and interactive DIL interfaces, running on your
@@ -36,15 +36,27 @@ Try `npm run dev:profiles` for a [custom grammar example](examples/profiles/READ
 
 ## Use the packages
 
-The packages are not yet published on npm. Build local archives:
+Install the beta frontend packages:
+
+```sh
+npm install @intlui/react@beta @intlui/client@beta
+```
+
+For the backend:
+
+```sh
+npm install @intlui/server@beta
+```
+
+All four packages are released as `0.1.0-beta.1`. Use explicit versions for
+reproducible installs. To build local archives instead:
 
 ```sh
 npm run pack:packages
 ```
 
 Install all four archives from `dist/packages` in your project with
-`npm install <paths-to-the-four-archives>`. After npm publication, frontend apps
-can install `@intlui/react @intlui/client` and backends can install `@intlui/server`.
+`npm install <paths-to-the-four-archives>`.
 
 - [Server and OpenAI](packages/server/README.md): routes, authentication, storage and limits.
 - [React + Vite + Node](examples/vite-node/README.md): a complete same-origin example.
