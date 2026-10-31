@@ -17,11 +17,17 @@ function demoProvider() {
 
 export function createExampleChat(env = process.env) {
   const demo = env.INTLUI_DEMO === '1', expected = env.CHAT_SESSION_TOKEN;
+  const allowedOrigins=[];
+  if (env.CHAT_ORIGIN) {
+    const origin=new URL(env.CHAT_ORIGIN);
+    if (!['http:','https:'].includes(origin.protocol) || origin.origin!==env.CHAT_ORIGIN) throw Error('CHAT_ORIGIN must be an exact HTTP(S) origin');
+    allowedOrigins.push(origin.origin);
+  }
   if (!demo && (!expected || expected.length < 24)) throw Error('Set CHAT_SESSION_TOKEN (at least 24 characters) or explicitly enable INTLUI_DEMO=1');
   const provider = demo ? demoProvider() : createOpenAiProvider({apiKey:env.OPENAI_API_KEY, model:env.OPENAI_MODEL,
     translationModel:env.OPENAI_TRANSLATION_MODEL || env.OPENAI_MODEL,
     instructions:'Respond in English. Preserve facts and qualifications; do not claim external actions that were not performed.'});
-  return createChatHandler({provider, authenticate(request) {
+  return createChatHandler({provider, allowedOrigins, authenticate(request) {
     const header = request.headers.get('authorization') || '', value = header.startsWith('Bearer ') ? header.slice(7) : '';
     if (demo) return /^[a-zA-Z0-9-]{16,128}$/.test(value) ? {userId:value} : null;
     const supplied = Buffer.from(value), target = Buffer.from(expected);

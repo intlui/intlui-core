@@ -18,6 +18,7 @@ const origin=`http://127.0.0.1:${port}`;
 const cwd=mode==='next'?resolve(process.env.INTLUI_NEXT_CONSUMER || 'examples/next-chat'):process.cwd();
 const args=mode==='next'?[join(cwd,'node_modules/next/dist/bin/next'),'start','--hostname','127.0.0.1','--port',String(port)]:['examples/profiles/server.mjs'];
 const env={...process.env,PORT:String(port),INTLUI_DEMO:'1',NEXT_TELEMETRY_DISABLED:'1'};
+if(mode==='next')env.CHAT_ORIGIN=origin;
 delete env.OPENAI_API_KEY;
 const app=spawn(process.execPath,args,{cwd,env,windowsHide:true,stdio:['ignore','pipe','pipe']});
 let logs='',browser,spawnError;
@@ -57,7 +58,7 @@ try {
     const firstResponse=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/chat');
     await page.click('form button');
     const response=await firstResponse;
-    assert.equal(response.status(),200,`Chat route failed: ${await response.text()}`);
+    if(response.status()!==200)assert.fail(`Chat route failed (${response.status()}): ${await response.text()}`);
     await page.waitForSelector('input[type=checkbox]');
     console.log('Next first interactive block rendered');
     await page.click('input[type=checkbox]');
