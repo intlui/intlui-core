@@ -80,7 +80,7 @@ invocation, without changing global Git settings.
 Next production-server interaction, physical dragging, playback, GPU behavior
 and broader browser coverage remain outside the passing checks.
 
-## Unreleased 0.2.0-beta.1 extensibility checks
+## 0.2.0-beta.1 extensibility checks
 
 On 2026-10-31: 119 package tests passed, including explicit 0.2 request/event
 matching, frozen 0.1 restrictions, application-owned surface/component round trips,
@@ -96,4 +96,11 @@ The user manually verified the new profile demo in the browser on 2026-10-31,
 including local counter state across data revisions and reset. This is manual
 validation, not automated browser coverage. Older-peer interoperability over a
 real network has not been exercised. Legacy behavior is covered by unit tests;
-no live provider calls or publication were performed for this change.
+no live provider calls were performed for this change.
+
+All four 0.2.0-beta.1 packages were subsequently published using Trusted Publishing
+on 2026-10-31. The first verification ran before registry propagation completed;
+verification now polls pending versions/tags with bounded retries. The separate
+[registry verification](https://github.com/intlui/intlui-core/actions/runs/41221841795)
+passed: beta tags and integrity, fresh registry installation, package imports,
+compiler and static React rendering. No publication retry was needed.

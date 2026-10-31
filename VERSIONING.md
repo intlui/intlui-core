@@ -1,7 +1,6 @@
 # Versioning
 
-Project packages use Semantic Versioning. The working package version is **0.2.0-beta.1** (not yet published);
-the published beta remains **0.1.0-beta.1**. Wire protocols **0.1** and **0.2**
+Project packages use Semantic Versioning. The published beta is **0.2.0-beta.1**. Wire protocols **0.1** and **0.2**
 are supported; the built-in UI profile remains **0.1**. Third-party dependencies
 retain their own versions. Test cases may intentionally use unsupported versions.
 

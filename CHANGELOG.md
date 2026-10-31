@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0-beta.1 ? Unreleased
+## 0.2.0-beta.1 - 2026-10-31
 
 - Add explicit wire protocol 0.2 with application-owned surface identifiers.
 - Keep protocol 0.1 and its frozen surface restrictions for existing peers.
@@ -8,7 +8,10 @@
   components work through client/server validation and rendering.
 - Add an external counter component and dashboard surface example.
 - See EXTENSIONS.md for registration and migration. No existing npm version or
-  Git tag is overwritten by this working release.
+  Git tag is overwritten by this release.
+- Published all four packages through Trusted Publishing. Fresh registry
+  installation, beta tags, integrity, imports, compilation and static rendering
+  verified in GitHub Actions run 41221841795.
 
 ## 0.1.0-beta.1 — 2026-10-31
 

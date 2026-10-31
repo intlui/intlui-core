@@ -1,6 +1,6 @@
 # IntlUI
 
-Published npm release: 0.1.0-beta.1. Working tree: 0.2.0-beta.1 (unreleased). [Validation and remaining work](STATUS.md) ·
+Published npm beta release: 0.2.0-beta.1. [Validation and remaining work](STATUS.md) ·
 [Language profile architecture](ARCHITECTURE.md).
 
 React chat with text responses and interactive DIL interfaces, running on your
@@ -48,8 +48,8 @@ For the backend:
 npm install @intlui/server@beta
 ```
 
-All four published packages are released as `0.1.0-beta.1`.
-The extensibility changes in this working tree require the forthcoming `0.2.0-beta.1`;
+All four published packages are released as `0.2.0-beta.1`.
+For application-owned surfaces and components,
 see [extension registration and migration](EXTENSIONS.md). Use explicit versions for
 reproducible installs. To build local archives instead:
 

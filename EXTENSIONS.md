@@ -1,6 +1,6 @@
 # Application-owned extensions
 
-Available in the working 0.2.0-beta.1 release, not in npm 0.1.0-beta.1.
+Available in npm 0.2.0-beta.1, not in 0.1.0-beta.1.
 
 A surface identifies the host, for example `example.dashboard` or `example.native`.
 In wire protocol 0.2 it is a bounded identifier, not a core registry entry and not
@@ -66,12 +66,12 @@ stays explicit so applications never advertise implementations they do not have.
 
 ## Migration
 
-- Upgrade all four packages together to the new release when it is published.
+- Upgrade all four packages together to 0.2.0-beta.1.
 - Existing clients may continue using wire protocol 0.1. `PROTOCOL_VERSION` and
   the chat hook's default remain 0.1 to avoid silently switching existing peers.
 - For new surfaces, set request `version: '0.2'`, or hook `protocolVersion: '0.2'`.
   `EXTENSIBLE_PROTOCOL_VERSION` exports this value. Upgrade the server first:
-  beta.1 peers reject 0.2 explicitly; there is no automatic downgrade.
+  0.1.0-beta.1 peers reject 0.2 explicitly; there is no automatic downgrade.
 - `validateCapabilities(value)` validates 0.2. Pass `'0.1'` as its second argument
   when checking legacy inputs outside `validateRequest`.
 - Pass the request version to `createTurnState`. Events must keep that version
