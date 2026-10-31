@@ -31,6 +31,7 @@ async function command(name, args, cwd = root, extraEnv = {}) {
   await new Promise(done => stream.end(done));
   results.push({name, status, log});
   console.log(`${status.toUpperCase()}: ${name}`);
+  if (status === 'failed') console.error((await readFile(log, 'utf8')).slice(-12000));
   return status === 'passed';
 }
 const npmRun = name => [npm, 'run', name];

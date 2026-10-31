@@ -32,11 +32,13 @@ try {
     await delay(250);
   }
   assert(ready,'Server did not become ready');
+  console.log('Server ready:',mode);
   browser=await puppeteer.launch({executablePath:chromeExecutable(),headless:true,
     timeout:20000,protocolTimeout:20000,userDataDir:await mkdtemp(join(output,'chrome-'))});
   const page=await browser.newPage(),errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto(origin,{waitUntil:'networkidle0'});
+  console.log('Page loaded:',mode);
   if(mode==='profiles') {
     await page.click('main > button');
     await page.waitForFunction(()=>document.body.textContent.includes('Server count: 1; local clicks: 0'));
@@ -51,14 +53,17 @@ try {
     console.log('Passed: protocol 0.2 custom surface/component, streamed data, DOM identity, local state and conversation reset.');
   } else {
     await page.waitForSelector('form button:not([disabled])');
+    console.log('Next client hydrated');
     await page.click('form button');
     await page.waitForSelector('input[type=checkbox]');
+    console.log('Next first interactive block rendered');
     await page.click('input[type=checkbox]');
     await page.waitForFunction(()=>![...document.querySelectorAll('button')].some(b=>b.textContent==='Stop'));
     assert(await page.$eval('input[type=checkbox]',el=>el.checked));
     await page.type('textarea','Second synthetic message');
     await page.click('form button');
     await page.waitForFunction(()=>document.body.textContent.includes('Previous turns: 1.'));
+    console.log('Next conversation history verified');
     await page.waitForFunction(()=>![...document.querySelectorAll('button')].some(b=>b.textContent==='Stop'));
     assert(await page.$eval('input[type=checkbox]',el=>el.checked),'Earlier interaction must survive the next turn');
     await page.type('textarea','Cancel this turn');await page.click('form button');
@@ -73,6 +78,14 @@ try {
   }
   assert.deepEqual(errors,[]);
   await page.screenshot({path:join(output,'result.png'),fullPage:true});
+} catch (error) {
+  console.error(logs.slice(-8000));
+  if(browser) {
+    const pages=await browser.pages();const page=pages.at(-1);
+    console.error('Page text:',await page?.evaluate(()=>document.body.innerText));
+    await page?.screenshot({path:join(output,'failure.png'),fullPage:true});
+  }
+  throw error;
 } finally {
   await browser?.close();
   if(app.exitCode===null){const closed=once(app,'close');app.kill();await closed;}
