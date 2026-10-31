@@ -115,7 +115,7 @@ The consumer browser fixture checks render counts, data/theme propagation and
 selection/frame preservation; its execution is pending in the current environment.
 
 Independent DIL renderer with shared compiler and components. This is not
-complete ChatGPT compatibility and is not a published package.
+complete ChatGPT compatibility. The package is published on npm on the `beta` channel.
 
 ```jsx
 import { IntluiAnswer } from '@intlui/react';
@@ -130,7 +130,8 @@ not need to transpile this package's JSX. `npm run build --workspace @intlui/rea
 creates those files. Run the build explicitly after npm ci and after editing sources, before starting a consuming app. npm pack builds before packing.
 The React tarball includes `dist/`, its manifest, README, LICENSE and NOTICE.
 React/React DOM are peers; client, protocol, Acorn and Marked remain external dependencies.
-The packages are not yet published to a registry.
+Install the published beta with `npm install @intlui/react@beta @intlui/client@beta`.
+Use explicit versions for reproducible installations.
 
 Direct Node imports support server rendering of original text and the runtime
 loading placeholder without browser globals. Interactive DIL rendering starts
@@ -145,7 +146,9 @@ the side-effect CSS import. TypeScript React consumers should install
 entry does not import React types or require DOM globals. Protocol types ship
 with `@intlui/protocol`.
 
-Type declarations for the new APIs still need a dedicated TypeScript verification. See the repository STATUS.md for the current checks and gaps.
+Strict TypeScript consumer checks passed for 0.2.0-beta.1, including protocol
+selection and application-owned surfaces. This does not cover every exported
+signature; see [TESTING.md](../../TESTING.md) for the recorded scope.
 
 ```tsx
 import { DilSource, type DilComponents } from '@intlui/react';

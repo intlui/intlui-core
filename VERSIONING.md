@@ -37,12 +37,14 @@ Development uses `main` with short-lived branches and checked pull requests.
 There is no permanent development or release branch. Releases are explicit;
 merging a change does not publish it. All four packages share one version.
 Beta releases use matching `vX.Y.Z-beta.N` Git tags and the npm `beta` dist-tag
-when npm publishing is enabled. Version 0.2 adds extensible surface semantics;
+for published packages. Version 0.2 adds extensible surface semantics;
 0.1 retains its original semantics. Profile versions change independently. Promote to an ordinary release only by a separate
 release decision; never overwrite a published beta version.
 
-Publishing source on GitHub does not publish packages on npm. Keep `private: true`
-until a separate npm release is authorized. The workspace root remains private.
+Pushing source updates to the public GitHub repository does not publish packages
+on npm. The four library packages are public; each new npm release requires
+separate authorization. The workspace root and examples retain `private: true`
+to prevent accidental npm publication.
 Use immutable `vX.Y.Z` Git tags for releases, with changelog and validation evidence.
 Never reuse a released version, force-update a release tag or publish from failing
 checks. A GitHub source preview may disclose outstanding validation gaps without

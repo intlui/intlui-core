@@ -110,9 +110,10 @@ provisional state; errors drain previously accepted text before failing. Events
 must be ordered by the host adapter. This is not provider-specific diarization,
 audio playback alignment or a reconnect/resume protocol.
 
-Private local workspace package. Not published to npm. A browser/Node 22 client
-for IntlUI protocol 0.1 with no React dependency and no model provider keys.
-The website and partner widget use this same transport.
+Public npm package for browser/Node 22 applications, supporting IntlUI protocols
+0.1 and 0.2 with no React dependency and no model provider keys.
+Install the beta with `npm install @intlui/client@beta`. See the repository
+[extension guide](../../EXTENSIONS.md) for explicit protocol 0.2 selection.
 
 ```js
 import { startTurn } from '@intlui/client';

@@ -45,7 +45,8 @@ browser interactions on 2026-10-31; see TESTING.md for scope.
   and a public example, not those private implementations.
 - Expand CI integration coverage as appropriate. CI currently checks sources and
   publication candidates, runs package tests, and builds the library and four
-  Vite demos. GitHub-hosted execution remains to be observed after remote creation.
+  Vite demos. [GitHub-hosted checks passed](https://github.com/intlui/intlui-core/actions/runs/41221841861)
+  for the 0.2.0-beta.1 release verification update.
 
 OpenAI transport is tested with simulated responses. A live check is separate
 and optional, requiring explicit credentials and budget. Ordinary checks must

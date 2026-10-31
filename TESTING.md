@@ -63,9 +63,11 @@ TypeScript 5.9.3 and React 19 declarations did allow strict declaration checking
 and the consumer fixture in `examples/typescript` with skipLibCheck disabled.
 This does not verify fresh registry installation or every exported signature.
 
-CI runs source/publication checks, package tests, the library build and four Vite
-example builds. It does not publish, use credentials or call live model providers.
-GitHub-hosted execution itself remains to be observed after repository creation.
+The `Core checks` workflow runs source/publication checks, package tests, the
+library build and four Vite example builds. It does not publish or call live model
+providers. [GitHub-hosted execution passed](https://github.com/intlui/intlui-core/actions/runs/41221841861)
+for the 0.2.0-beta.1 release verification update. The separately dispatched
+`publish.yml` workflow publishes through npm Trusted Publishing.
 
 ## Subsequent user-run verification — 2026-10-31
 

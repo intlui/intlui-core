@@ -16,9 +16,10 @@ Follow VERSIONING.md. Update code, types, examples, fixtures and docs together.
 Dependencies and deliberately invalid versions in tests are not project releases.
 Follow the documented SemVer and protocol compatibility
 rules; never silently change a published contract or rewrite a released tag.
-GitHub source publication and npm publication are separate actions. Keep npm
-packages private until an npm release is explicitly authorized. Preparing a
-release does not authorize pushing, tagging, deploying or publishing it.
+The repository and four library packages are public. GitHub source updates and
+npm publication are separate actions; each new npm release requires explicit
+authorization. The workspace root and examples remain non-publishable. Preparing
+a release does not authorize pushing, tagging, deploying or publishing it.
 
 ## Verification and public contents
 
@@ -26,7 +27,7 @@ Do not describe the suite as complete or 100% coverage without measured evidence
 and explicit scope. Record untested browser, framework and provider behavior in
 TESTING.md and STATUS.md. Add regression tests for changed boundary behavior.
 Use only synthetic fixtures. Keep diagnostics in the system temporary directory.
-Before GitHub publication, run the release checks in CONTRIBUTING.md, inspect
+Before pushing source updates, run the applicable checks in CONTRIBUTING.md, inspect
 the exact Git candidate files, and verify LICENSE/NOTICE are included. Do not
 copy private specifications or add provenance inventories and local machine paths.
 
