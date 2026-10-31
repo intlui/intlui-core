@@ -19,6 +19,10 @@ browser interactions on 2026-10-31; see TESTING.md for scope.
 
 ## Completed checks
 
+- [All 14 automated release stages passed](https://github.com/intlui/intlui-core/actions/runs/41223935913),
+  including 120 tests, custom-profile browser state preservation and Next
+  production chat, history, cancellation and reset. See TESTING.md.
+
 - All 12 stages of `npm run verify:release` passed in the user's Windows
   environment on 2026-10-31, including both Chrome browser tests, fresh external
   Next consumer installation from local archives, TypeScript and Next build.
@@ -38,15 +42,15 @@ browser interactions on 2026-10-31; see TESTING.md for scope.
 
 - Expand browser tests beyond the passing chat and advanced scenarios.
   Physical dragging, playback, WebGL and resource cleanup need further checks.
-- Exercise the running Next.js production application. The user-run release
-  verification passed the full Next.js build on 2026-10-31; this does not establish
-  browser interaction with a running Next server.
+- Expand Next.js coverage beyond the passing synthetic production-server browser
+  scenario to application-specific deployment and authentication configurations.
 - Integrate private application profiles separately. The core supplies contracts
   and a public example, not those private implementations.
 - Expand CI integration coverage as appropriate. CI currently checks sources and
   publication candidates, runs package tests, and builds the library and four
   Vite demos. [GitHub-hosted checks passed](https://github.com/intlui/intlui-core/actions/runs/41221841861)
-  for the 0.2.0-beta.1 release verification update.
+  for the 0.2.0-beta.1 release verification update. The separate release integration
+  workflow also runs browser profiles and the Next production server.
 
 OpenAI transport is tested with simulated responses. A live check is separate
 and optional, requiring explicit credentials and budget. Ordinary checks must

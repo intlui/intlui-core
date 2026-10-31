@@ -12,25 +12,26 @@ Ordinary tests use synthetic providers and make no paid calls.
 | React/runtime | Compilation, static rendering, callback identity, stale callbacks, worker validation and cleanup; Chrome chat hydration, controls, streaming state, history and reset | Single Chrome environment; no exhaustive iframe or GPU validation |
 | Advanced components | Static tag rendering and compilation; Chrome form state across data updates, timer, local data and map rendering | Physical drag, media playback, browser resource cleanup and WebGL need more integration tests |
 | Custom profiles | Different grammar, unknown versions, data rejection, one state owner, shared primitives, source/profile immutability | Private application integrations are outside this repository |
-| Packaging | Four archives installed outside the workspace, licenses, public exports, synthetic chat, custom profile, Vite build; fresh registry dependency installation in the Next consumer | IntlUI itself installed from local archives, not npm-published packages |
-| Next.js / TypeScript | Next route runs with Request/Response; full Next production build; strict TypeScript consumer checks public exports, JSX and invalid inputs | Running Next production-server browser exercise and exhaustive declaration coverage remain unverified |
+| Packaging | Four archives installed outside the workspace, licenses, public exports, synthetic chat, custom profile, Vite build; fresh registry dependency installation in the Next consumer | Archive integration and separate fresh npm installation verified; no deployment test |
+| Next.js / TypeScript | Next route runs with Request/Response; full Next production build; strict TypeScript consumer checks public exports, JSX and invalid inputs | Synthetic production-server browser exercise passed; exhaustive declaration coverage remains unverified |
 
 ## Reproducing checks
 
 For a guided local release check, run `npm run verify:release` with Node.js 22+,
 npm, internet access and Chrome installed. It installs core dependencies using
 `npm ci`, then runs source/publication checks, unit tests, builds and browser
-checks. Browser tooling and a fresh Next.js consumer are installed in a unique
+checks, including the custom profile demo. Browser tooling and a fresh Next.js consumer are installed in a unique
 system temporary directory. The consumer installs the four local archives from
-this checkout and checks TypeScript and a production Next build. It never
+this checkout and checks TypeScript, a production Next build and browser interaction
+with the running Next server. It never
 publishes or calls a paid provider. Set `CHROME_PATH` for a non-default browser.
 The command prints progress and the paths to `summary.txt`, `summary.json` and
 individual logs. Failed independent checks do not prevent later checks; missing
 prerequisites stop their dependent checks. A nonzero exit means the run did not
-fully pass. This does not test a running Next production server.
+fully pass. The production-server test explicitly uses synthetic responses.
 
-The current local package run exercises 113 tests: protocol 17, client 30,
-React 45 and server 21. Counts are a snapshot, not a completeness target.
+The current package suite contains 120 tests: protocol 20, client 30,
+React 47 and server 23. Counts are a snapshot, not a completeness target.
 
 `npm test` runs all four package suites; React builds first. `npm run test:coverage`
 runs those tests with Node V8 coverage and writes per-package reports under the
@@ -106,3 +107,24 @@ verification now polls pending versions/tags with bounded retries. The separate
 [registry verification](https://github.com/intlui/intlui-core/actions/runs/41221841795)
 passed: beta tags and integrity, fresh registry installation, package imports,
 compiler and static React rendering. No publication retry was needed.
+
+## Automated release integration ? 2026-10-31
+
+[Release integration checks](https://github.com/intlui/intlui-core/actions/runs/41223935913)
+passed all 14 stages on Ubuntu with Node 24 and Chrome: clean installation,
+source/publication checks, 120 tests, build, browser tooling, chat, advanced
+components, custom profiles, archives, external Next consumer installation,
+TypeScript, Next production build and Next production browser interactions.
+
+The custom profile test checks protocol 0.2, the external component/surface,
+DOM identity and local state across streamed data revisions, and reset.
+The Next test checks hydration, HTTP streaming, interactive controls, history,
+cancellation and reset. It exposed two example configuration issues: externalizing
+the React renderer broke SSR hooks, and the internal request URL required an
+explicit public CHAT_ORIGIN. Both are corrected; origin and authentication
+rejection have regression coverage. Published library packages were not changed.
+
+The release-checks.yml workflow runs these checks for relevant changes and can be
+dispatched manually. It uploads diagnostic artifacts and does not publish or
+call model providers. Local Windows agent attempts hit Chrome startup restrictions
+and an npm reinstall failure; they are not counted as passing local runs.
