@@ -1,0 +1,31 @@
+name: Stage first npm beta
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: npm-beta-release
+  cancel-in-progress: false
+jobs:
+  stage:
+    if: github.repository == 'intlui/intlui-core' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm install --global npm@11
+      - run: npm ci
+      - run: npm run check
+      - run: npm run check:publication
+      - run: npm test
+      - run: npm run build
+      - run: npm run audit:consumer
+      - name: Stage packages for maintainer review
+        run: |
+          node -e "if (!process.env.NODE_AUTH_TOKEN) throw Error('Configure the NPM_BOOTSTRAP_TOKEN repository secret first')"
+          npm run stage:beta
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_BOOTSTRAP_TOKEN }}

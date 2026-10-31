@@ -41,11 +41,22 @@ The manually dispatched `publish.yml` workflow publishes all four packages in
 dependency order using npm trusted publishing. Configure each package's trusted
 publisher with organization `intlui`, repository `intlui-core`, workflow filename
 `publish.yml`, no environment, and permission to publish directly. No npm token
-is stored in the repository. Initial package creation may require an authenticated
-maintainer to publish locally before package settings are available.
+is stored in the repository.
 
-For that initial release, run `npm login`, then `npm run publish:beta` from a
-reviewed checkout after release verification. This is an actual public upload.
+For the first release, use `bootstrap-npm.yml` (Stage first npm beta). Create a
+short-lived npm granular token with read/write stage-only access to the `@intlui`
+scope and store it as the GitHub Actions repository secret `NPM_BOOTSTRAP_TOKEN`.
+Do not put it in source, logs or chat. The workflow grants the token only to the
+staging step, after checks/builds. It has no OIDC permission. npm 11.15+ is required;
+the workflow installs the current npm 11 release.
+Run it manually on main, then approve the four beta versions in npm's Staged
+Packages tab using 2FA. Staging a new name creates a public `0.0.0-stage`
+placeholder; actual beta contents remain staged until approval. Configure the
+trusted publishers above for later releases, then revoke the bootstrap token and
+delete its GitHub secret. New trusted publisher configurations must be validated
+by a successful publish within npm's documented expiry period (currently 2 days).
+See https://docs.npmjs.com/staged-publishing/ and
+https://docs.npmjs.com/trusted-publishers/ for the account-side setup.
 Publishing is not transactional: if it fails partway, inspect which versions exist
 before retrying. Never overwrite published versions. GitHub tags/releases are
 created separately once all four npm packages have been verified.
