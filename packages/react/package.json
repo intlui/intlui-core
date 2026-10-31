@@ -1,0 +1,75 @@
+{
+  "name": "@intlui/react",
+  "version": "0.1.0-beta.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./compiler": {
+      "types": "./dist/compiler.d.ts",
+      "default": "./dist/compiler.js"
+    },
+    "./capabilities": {
+      "types": "./dist/capabilities.d.ts",
+      "default": "./dist/capabilities.js"
+    },
+    "./styles.css": {
+      "types": "./dist/styles.d.css.ts",
+      "default": "./dist/styles.css"
+    },
+    "./primitives": {
+      "types": "./dist/primitives.d.ts",
+      "default": "./dist/primitives.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "pretest": "npm run build",
+    "prepack": "npm run build",
+    "test": "node --test test/*.test.mjs",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@intlui/protocol": "0.1.0-beta.1",
+    "acorn": "^8.19.0",
+    "marked": "^18.1.1",
+    "@intlui/client": "0.1.0-beta.1"
+  },
+  "peerDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "vite": "^8.3.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intlui/intlui-core.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/intlui/intlui-core#readme",
+  "bugs": {
+    "url": "https://github.com/intlui/intlui-core/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "beta",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@intlui/client",
+  "version": "0.1.0-beta.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "dependencies": {
+    "@intlui/protocol": "0.1.0-beta.1"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intlui/intlui-core.git",
+    "directory": "packages/client"
+  },
+  "homepage": "https://github.com/intlui/intlui-core#readme",
+  "bugs": {
+    "url": "https://github.com/intlui/intlui-core/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "beta",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

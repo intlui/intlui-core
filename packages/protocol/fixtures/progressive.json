@@ -1,0 +1,18 @@
+{
+  "synthetic": true,
+  "request": {
+    "version": "0.1",
+    "requestId": "request-demo",
+    "intent": "Show a checklist",
+    "input": { "mode": "translate", "text": "Verify data. Verify controls." },
+    "capabilities": { "surface": "react", "formats": ["dil"], "components": ["text", "checkbox"] }
+  },
+  "scope": { "projectId": "project-demo", "conversationId": "conversation-demo", "turnId": "turn-demo" },
+  "events": [
+    { "version": "0.1", "projectId": "project-demo", "conversationId": "conversation-demo", "turnId": "turn-demo", "sequence": 1, "turnRevision": 0, "type": "text.delta", "text": "Verify data. " },
+    { "version": "0.1", "projectId": "project-demo", "conversationId": "conversation-demo", "turnId": "turn-demo", "sequence": 2, "turnRevision": 0, "type": "ui.create", "block": { "id": "tasks", "format": "dil", "source": "{@body const data=DIL.useAppData()}\n{@body const [done,setDone]=DIL.useState(false)}\n<checkbox checked={done} onChange={setDone}>{data.label}</checkbox>", "appData": { "label": "Verify data" }, "revision": 1, "requiredComponents": ["checkbox"] } },
+    { "version": "0.1", "projectId": "project-demo", "conversationId": "conversation-demo", "turnId": "turn-demo", "sequence": 3, "turnRevision": 0, "type": "text.delta", "text": "Verify controls." },
+    { "version": "0.1", "projectId": "project-demo", "conversationId": "conversation-demo", "turnId": "turn-demo", "sequence": 4, "turnRevision": 0, "type": "ui.data", "id": "tasks", "revision": 2, "appData": { "label": "Verify data and controls" } },
+    { "version": "0.1", "projectId": "project-demo", "conversationId": "conversation-demo", "turnId": "turn-demo", "sequence": 5, "turnRevision": 0, "type": "turn.end", "status": "complete" }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "intlui-core",
+  "version": "0.1.0-beta.1",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "publish:beta": "npm run check:publication && npm run build && node scripts/publish-beta.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "check:publication": "node scripts/check-publication.mjs",
+    "test:coverage": "npm run build && node scripts/test-coverage.mjs",
+    "dev:profiles": "npm run build && node examples/profiles/server.mjs",
+    "build:profiles": "npm run build && vite build examples/profiles",
+    "check": "node scripts/check.mjs",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "dev:adapters": "npm run build && vite examples/react-css-modules --host 127.0.0.1 --port 5191 --strictPort",
+    "build:adapters": "npm run build && vite build examples/react-css-modules",
+    "dev:chat": "npm run build && node --env-file-if-exists=examples/vite-node/.env examples/vite-node/server.mjs",
+    "dev:chat:demo": "npm run build && node examples/vite-node/server.mjs --demo",
+    "build:chat": "npm run build && vite build examples/vite-node",
+    "dev:advanced": "npm run build && vite examples/advanced --host 127.0.0.1 --port 5193 --strictPort",
+    "build:advanced": "npm run build && vite build examples/advanced",
+    "audit:consumer": "node scripts/audit-consumer.mjs",
+    "pack:packages": "npm run build && node scripts/pack-packages.mjs",
+    "test:browser:chat": "node scripts/test-chat-browser.mjs",
+    "test:browser:advanced": "node scripts/test-advanced-browser.mjs"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intlui/intlui-core.git"
+  },
+  "homepage": "https://github.com/intlui/intlui-core#readme",
+  "bugs": {
+    "url": "https://github.com/intlui/intlui-core/issues"
+  }
+}

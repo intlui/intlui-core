@@ -1,0 +1,78 @@
+{
+  "name": "@intlui/server",
+  "version": "0.1.0-beta.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./node": {
+      "types": "./src/node.d.ts",
+      "default": "./src/node.js"
+    },
+    "./openai": {
+      "types": "./src/openai.d.ts",
+      "default": "./src/provider.js"
+    },
+    "./translator": {
+      "types": "./src/translator.d.ts",
+      "default": "./src/stream-translator.js"
+    },
+    "./transport": {
+      "types": "./src/transport.d.ts",
+      "default": "./src/stream-transport.js"
+    },
+    "./prompts": {
+      "types": "./src/prompts.d.ts",
+      "default": "./src/dil-prompt.js"
+    },
+    "./validation": {
+      "types": "./src/validation.d.ts",
+      "default": "./src/validate-source.js"
+    },
+    "./pipeline": {
+      "types": "./src/pipeline.d.ts",
+      "default": "./src/translation-pipeline.js"
+    },
+    "./compose": {
+      "types": "./src/compose.d.ts",
+      "default": "./src/compose-provider.js"
+    },
+    "./chat-completions": {
+      "types": "./src/chat-completions.d.ts",
+      "default": "./src/chat-completions-source.js"
+    }
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@intlui/protocol": "0.1.0-beta.1",
+    "@intlui/react": "0.1.0-beta.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intlui/intlui-core.git",
+    "directory": "packages/server"
+  },
+  "homepage": "https://github.com/intlui/intlui-core#readme",
+  "bugs": {
+    "url": "https://github.com/intlui/intlui-core/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "beta",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

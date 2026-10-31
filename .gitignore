@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-portable/
+build/
+coverage/
+.env*
+!.env.example
+captures/
+test-output/
+.capture-profile*/
+*.log
+*.tgz
+.DS_Store
+Thumbs.db
+.next/
+next-env.d.ts

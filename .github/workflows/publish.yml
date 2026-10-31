@@ -1,0 +1,29 @@
+name: Publish npm beta
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: npm-beta-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'intlui/intlui-core' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm install --global npm@11
+      - run: npm ci
+      - run: npm run check
+      - run: npm run check:publication
+      - run: npm test
+      - run: npm run build
+      - run: npm run audit:consumer
+      - run: npm run publish:beta

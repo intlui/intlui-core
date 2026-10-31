@@ -1,0 +1,39 @@
+{
+  "name": "@intlui/protocol",
+  "version": "0.1.0-beta.1",
+  "type": "module",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check src/index.js"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intlui/intlui-core.git",
+    "directory": "packages/protocol"
+  },
+  "homepage": "https://github.com/intlui/intlui-core#readme",
+  "bugs": {
+    "url": "https://github.com/intlui/intlui-core/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "beta",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
