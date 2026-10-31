@@ -11,6 +11,7 @@
     "packages/*"
   ],
   "scripts": {
+    "verify:npm": "node scripts/verify-npm-release.mjs",
     "stage:beta": "node scripts/publish-beta.mjs --stage",
     "publish:beta": "npm run check:publication && npm run build && node scripts/publish-beta.mjs",
     "verify:release": "node scripts/verify-release.mjs",

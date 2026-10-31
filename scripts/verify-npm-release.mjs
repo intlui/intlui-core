@@ -1,0 +1,38 @@
+import assert from 'node:assert/strict';
+import {mkdtemp,writeFile,readFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {spawnSync} from 'node:child_process';
+const {version}=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
+const names=['protocol','client','react','server'];
+const dependencies={react:'^19.0.0','react-dom':'^19.0.0'};
+for(const name of names){
+  const id=`@intlui/${name}`;
+  const response=await fetch(`https://registry.npmjs.org/${encodeURIComponent(id)}`,{signal:AbortSignal.timeout(30000)});
+  assert(response.ok,`${id}: registry HTTP ${response.status}`);
+  const data=await response.json();
+  assert.equal(data['dist-tags'].beta,version,`${id}: unexpected beta tag`);
+  assert.equal(data.versions[version]?.version,version);
+  assert(data.versions[version].dist.integrity,`${id}: missing integrity`);
+  dependencies[id]=version;
+  console.log(`${id}@${version}: beta tag and registry integrity verified`);
+}
+const directory=await mkdtemp(join(tmpdir(),'intlui-registry-release-'));
+await writeFile(join(directory,'package.json'),JSON.stringify({name:'intlui-registry-smoke',private:true,type:'module',dependencies}));
+const npm=process.env.npm_execpath;assert(npm,'Run through npm');
+const install=spawnSync(process.execPath,[npm,'install','--no-audit','--no-fund'],{cwd:directory,stdio:'inherit',windowsHide:true});
+assert.equal(install.status,0,'Fresh registry installation failed');
+await writeFile(join(directory,'verify.mjs'),`import assert from 'node:assert/strict';
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {compileDil} from '@intlui/react/compiler';
+import {DilSource} from '@intlui/react';
+import {startTurn} from '@intlui/client';
+import {createChatHandler} from '@intlui/server';
+assert.equal(typeof startTurn,'function');assert.equal(typeof createChatHandler,'function');
+assert(compileDil('<text>Registry smoke</text>').payload.code);
+assert.equal(typeof renderToStaticMarkup(React.createElement(DilSource,{source:'<text>Registry smoke</text>'})),'string');
+console.log('Fresh published-package imports, compiler and static React rendering passed');
+`);
+const smoke=spawnSync(process.execPath,[join(directory,'verify.mjs')],{cwd:directory,stdio:'inherit',windowsHide:true});
+assert.equal(smoke.status,0,'Published package smoke failed');
