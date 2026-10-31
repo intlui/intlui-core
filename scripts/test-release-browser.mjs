@@ -54,7 +54,10 @@ try {
   } else {
     await page.waitForSelector('form button:not([disabled])');
     console.log('Next client hydrated');
+    const firstResponse=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/chat');
     await page.click('form button');
+    const response=await firstResponse;
+    assert.equal(response.status(),200,`Chat route failed: ${await response.text()}`);
     await page.waitForSelector('input[type=checkbox]');
     console.log('Next first interactive block rendered');
     await page.click('input[type=checkbox]');
